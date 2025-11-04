@@ -1,3 +1,5 @@
+import config
+
 from keras.preprocessing.image import ImageDataGenerator
 
 def get_augmented_data(train_dir, img_size=(128,128), batch_size=32):

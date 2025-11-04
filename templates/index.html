@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Phân loại rác</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        #result { margin-top: 20px; font-size: 1.2em; font-weight: bold; }
+        #preview { max-width: 300px; max-height: 300px; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <h2>Tải ảnh rác thải để phân loại</h2>
+    <input type="file" id="imageInput" accept="image/*">
+    <button id="predictButton">Dự đoán</button>
+    
+    <h3 id="result"></h3>
+    <img id="preview" src="" alt="Image preview">
+
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const predictButton = document.getElementById('predictButton');
+        const resultElement = document.getElementById('result');
+        const previewElement = document.getElementById('preview');
+
+        // Hiển thị ảnh preview
+        imageInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                previewElement.src = URL.createObjectURL(file);
+                resultElement.innerText = ''; // Xóa kết quả cũ
+            }
+        });
+
+        // Gửi ảnh đến server khi nhấn nút
+        predictButton.addEventListener('click', async () => {
+            const file = imageInput.files[0];
+            if (!file) {
+                alert('Vui lòng chọn một ảnh!');
+                return;
+            }
+
+            resultElement.innerText = 'Đang dự đoán...';
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                
+                if (data.prediction) {
+                    resultElement.innerText = 'Kết quả: ' + data.prediction;
+                } else {
+                    resultElement.innerText = 'Lỗi: ' + data.error;
+                }
+
+            } catch (error) {
+                resultElement.innerText = 'Lỗi kết nối đến server.';
+            }
+        });
+    </script>
+</body>
+</html>
