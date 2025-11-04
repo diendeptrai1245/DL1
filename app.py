@@ -1,68 +1,103 @@
-import os
-from flask import Flask, request, render_template, jsonify
-import tensorflow as tf
-from tensorflow.keras.preprocessing import image
+import streamlit as st
+from keras.models import load_model
+from keras.preprocessing import image
+from PIL import Image
 import numpy as np
-import config 
-import json
+import time
 
-# Initialize Flask app
-app = Flask(__name__)
+# PageConfig
+st.set_page_config(
+    page_title="Waste Classification - Deep Learning Project",
+    page_icon="♻️",
+    layout="centered"
+)
 
-# Load Model and Class Names from config
-print(f"Loading model from {config.MODEL_SAVE_PATH}...")
-model = tf.keras.models.load_model(config.MODEL_SAVE_PATH)
+# CSS
+st.markdown("""
+    <style>
+    .title {
+        text-align: center;
+        color: #00BFA6;
+        font-size: 32px;
+        font-weight: bold;
+    }
+    .subtitle {
+        text-align: center;
+        color: #808080;
+        font-size: 18px;
+    }
+    .result-box {
+        text-align: center;
+        padding: 15px;
+        border-radius: 10px;
+        color: white;
+        font-size: 22px;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+    .organic {
+        background: linear-gradient(90deg, #4CAF50, #2E7D32);
+    }
+    .non-organic {
+        background: linear-gradient(90deg, #FF7043, #BF360C);
+    }
+    </style>
+""", unsafe_allow_html=True)
 
-print(f"Loading class names from {config.CLASS_NAMES_PATH}...")
-with open(config.CLASS_NAMES_PATH, 'r', encoding='utf-8') as f:
-    classes = json.load(f)
+# Main title
+st.markdown("<p class='title'>♻️ Waste Classification App</p>", unsafe_allow_html=True)
+st.markdown("<p class='subtitle'>Predict 🌿 or 🧴 by Deep Learning</p>", unsafe_allow_html=True)
+st.divider()
 
-# Image processing helper function
-def process_image(img_path):
-    img = image.load_img(
-        img_path, 
-        target_size=(config.IMAGE_WIDTH, config.IMAGE_HEIGHT) 
-    )
-    img_array = image.img_to_array(img)
-    img_array = np.expand_dims(img_array, axis=0)
-    img_array = img_array / 255.0  # Normalize the image
-    return img_array
+# load model
+@st.cache_resource
+def load_cnn_model():
+    model_path = "models/cnn_rubbish_classifier.h5"
+    model = load_model(model_path)
+    return model
 
-# Home page route 
-@app.route('/')
-def home():
-    return render_template('index.html')
+model = load_cnn_model()
 
-# Prediction API route
-@app.route('/predict', methods=['POST'])
-def predict():
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file part'})
+# Upload image
+uploaded_file = st.file_uploader("📤 Upload image to predict", type=["jpg", "jpeg", "png"])
 
-    file = request.files['file']
-    
-    upload_folder = 'uploads'
-    if not os.path.exists(upload_folder):
-        os.makedirs(upload_folder)
-    img_path = os.path.join(upload_folder, file.filename)
-    file.save(img_path)
+if uploaded_file is not None:
+    # Display uploaded image
+    img = Image.open(uploaded_file)
+    st.image(img, caption="Image uploaded", use_container_width=True)
+    st.divider()
 
-    processed_img = process_image(img_path)
-    prediction = model.predict(processed_img)
-  
-    # ------------------ Prediction Logic ------------------
-    prediction_value = prediction[0][0]
-    
-    # If value > 0.5, it's class 1 (e.g., 'recyclable')
-    # Otherwise, it's class 0 (e.g., 'organic')
-    predicted_class_index = 1 if prediction_value > 0.5 else 0 
-    predicted_class_name = classes[predicted_class_index] 
-    # ---------------------------------------------------
+    # Start prediction button
+    if st.button("🚀 START"):
+        with st.spinner("Loading..."):
+            # Normalize image
+            img_resized = img.resize((128, 128))
+            img_array = image.img_to_array(img_resized) / 255.0
+            img_array = np.expand_dims(img_array, axis=0)
 
-    os.remove(img_path)
+            # Prediction
+            preds = model.predict(img_array)
+            prob = preds[0][0]
+            label = "Non-Organic Waste" if prob > 0.5 else "Organic Waste"
+            confidence = prob if prob > 0.5 else 1 - prob
 
-    return jsonify({'prediction': predicted_class_name})
+            # Simulate processing time
+            time.sleep(1)
 
-# Run the app
-if __name__ == '__main__':
-    app.run(debug=True)
+        st.success("✅ Completed!")
+        st.write("### 🔍 Result:")
+
+        # Confidence progress bar
+        st.progress(float(confidence))
+        st.write(f"**About:** {confidence*100:.2f}%")
+
+        # Result box
+        result_class = "non-organic" if prob > 0.5 else "organic"
+        st.markdown(f"<div class='result-box {result_class}'>{label}</div>", unsafe_allow_html=True)
+
+        st.divider()
+        st.markdown("**Project:** Waste Classification using Deep Learning")
+        st.markdown("**Group:** 44")
+        st.markdown("**Subject:** Deep Learning")
+else:
+    st.info("⬆️You need upload an image to predict.")
