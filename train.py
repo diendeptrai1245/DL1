@@ -20,5 +20,5 @@ history = model.fit(
 )
 
 # Lưu model
-model.save("cnn_rubbish_classifier.h5")
-print("✅ Model saved successfully!")
+model.save("models/cnn_rubbish_classifier.h5")
+print("Model saved successfully!")
