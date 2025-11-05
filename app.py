@@ -15,15 +15,23 @@ st.set_page_config(
 # CSS
 st.markdown("""
     <style>
+    [data-testid="stAppViewContainer"] {
+        background-color: #000000;
+        color: #FFFFFF;
+    }
+    [data-testid="stSidebar"] {
+        background-color: #111111;
+        color: #FFFFFF;
+    }
     .title {
         text-align: center;
-        color: #00BFA6;
+        color: #00FFAA;
         font-size: 32px;
         font-weight: bold;
     }
     .subtitle {
         text-align: center;
-        color: #808080;
+        color: #CCCCCC;
         font-size: 18px;
     }
     .result-box {
@@ -34,12 +42,25 @@ st.markdown("""
         font-size: 22px;
         font-weight: bold;
         margin-top: 20px;
+        border: 2px solid #00FFAA;
     }
     .organic {
-        background: linear-gradient(90deg, #4CAF50, #2E7D32);
+        background-color: #1B5E20;
     }
+
     .non-organic {
-        background: linear-gradient(90deg, #FF7043, #BF360C);
+        background-color: #B71C1C;
+    }
+    div.stButton > button:first-child {
+        background: #00FFAA;
+        color: #000;
+        font-weight: bold;
+        border-radius: 8px;
+        transition: 0.3s;
+    }
+    div.stButton > button:first-child:hover {
+        background: #00CC88;
+        color: white;
     }
     </style>
 """, unsafe_allow_html=True)
