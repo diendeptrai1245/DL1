@@ -5,7 +5,7 @@ import numpy as np
 # Load model
 model = load_model("models/cnn_rubbish_classifier.h5")
 
-# Hàm dự đoán ảnh
+# Prediction function
 def predict_image(img_path):
     img = image.load_img(img_path, target_size=(128, 128))
     img_array = image.img_to_array(img) / 255.0

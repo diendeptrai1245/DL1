@@ -1,8 +1,9 @@
-from src.evaluate import evaluate_model
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import load_model
 from keras.preprocessing import image
 import numpy as np
+import numpy as np
+import matplotlib.pyplot as plt
 
 # === Cấu hình đường dẫn ===
 MODEL_PATH = "models/cnn_rubbish_classifier.h5"
@@ -26,12 +27,6 @@ test_data = test_datagen.flow_from_directory(
     class_mode="binary",
     shuffle=False
 )
-
-# === Đánh giá mô hình ===
-model_evaluation = evaluate_model(model, test_data)
-
-import numpy as np
-import matplotlib.pyplot as plt
 
 # Lấy ngẫu nhiên 5 ảnh
 x_batch, y_batch = next(test_data)

@@ -6,6 +6,7 @@ from src.augmentation import get_augmented_data
 # Import config module
 import config
 import json
+import pickle
 
 # Main training script  
 print("Loading augmented training data...")
@@ -39,11 +40,17 @@ history = model.fit(
     epochs=config.EPOCHS # CHANGED: Use config for epochs
 )
 # Save training history plots  
-print("Saving training plots...")
-save_training_plots(history)
+# print("Saving training plots...")
+# save_training_plots(history)
 
 # Save model
 print(f"Saving model to {config.MODEL_SAVE_PATH}...")
+
+# Save training history using pickle
+with open("models/train_history.pkl", "wb") as f:
+    pickle.dump(history.history, f)
+print("✅ Training history saved to models/train_history.pkl")
+
 # Use config for save path
 model.save(config.MODEL_SAVE_PATH) 
 print("Model saved successfully.")
