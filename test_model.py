@@ -5,7 +5,7 @@ import numpy as np
 import numpy as np
 import matplotlib.pyplot as plt
 
-# === Cấu hình đường dẫn ===
+# === path config ===
 MODEL_PATH = "models/cnn_rubbish_classifier.h5"
 TEST_DIR = "DATASET/TEST"
 IMG_SIZE = (128, 128)
@@ -16,7 +16,7 @@ print("[INFO] Loading trained model...")
 model = load_model(MODEL_PATH)
 print("[INFO] Model loaded successfully!")
 
-# === Chuẩn bị dữ liệu test ===
+# === prepare data test ===
 print("[INFO] Loading test data...")
 test_datagen = ImageDataGenerator(rescale=1.0 / 255)
 
@@ -28,7 +28,7 @@ test_data = test_datagen.flow_from_directory(
     shuffle=False
 )
 
-# Lấy ngẫu nhiên 5 ảnh
+# get 5 pic (random)
 x_batch, y_batch = next(test_data)
 preds = model.predict(x_batch)
 
