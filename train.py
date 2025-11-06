@@ -37,20 +37,17 @@ print("Starting model training...")
 history = model.fit(
     train_data,
     validation_data=test_data,
-    epochs=config.EPOCHS # CHANGED: Use config for epochs
+    epochs=config.EPOCHS 
 )
-# Save training history plots  
-# print("Saving training plots...")
-# save_training_plots(history)
 
 # Save model
 print(f"Saving model to {config.MODEL_SAVE_PATH}...")
+
+# Use config for save path
+model.save(config.MODEL_SAVE_PATH) 
+print("Model saved successfully.")
 
 # Save training history using pickle
 with open("models/train_history.pkl", "wb") as f:
     pickle.dump(history.history, f)
 print("✅ Training history saved to models/train_history.pkl")
-
-# Use config for save path
-model.save(config.MODEL_SAVE_PATH) 
-print("Model saved successfully.")

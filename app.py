@@ -80,7 +80,7 @@ def load_cnn_model():
 model = load_cnn_model()
 
 # Upload image
-uploaded_file = st.file_uploader("📤 Upload image to predict", type=["jpg", "jpeg", "png", "webp"])
+uploaded_file = st.file_uploader("📤 Upload image to predict", type=["jpg", "jpeg", "png", "webp", "avif"])
 
 if uploaded_file is not None:
     # Display uploaded image
