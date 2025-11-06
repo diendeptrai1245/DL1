@@ -8,5 +8,5 @@ To running this project, following step by step:
 3.  Run pip install -r requirement.txt to install all the library need for run code.
 4.  If your code is error at import library its reason could be you were not choose correct Python Interpreter. You can use Ctrl + Shift + P --> Python: Select Interpreter --> Python 3.xx (venv).
 5.  Run file train.py first to train model.
-6.  After finish run train.py, run app.py to load UI
-6.  Then run file test_model.py to test model anh predict from pictures.
+6.  After finish run train.py, run app.py to load UI by using streamlit: streamlit run app.py
+7.  Then run file test_model.py to test model anh predict from pictures.
