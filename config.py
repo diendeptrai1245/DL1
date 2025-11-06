@@ -15,7 +15,7 @@ TEST_DIR = DATASET_DIR / 'TEST'
 # --- Model Config ---
 MODEL_SAVE_PATH = BASE_DIR / 'models' / 'cnn_rubbish_classifier.h5'
 CLASS_NAMES_PATH = BASE_DIR / 'class_names.json' # Path to save class names
-HISTORY_SAVE_PATH = BASE_DIR / 'training_history.json' # Path to save training history
+HISTORY_SAVE_PATH = BASE_DIR / 'models' / 'train_history.pkl' # Path to save training history
 
 # --- Training Parameters ---
 IMAGE_WIDTH = 128

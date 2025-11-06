@@ -1,4 +1,4 @@
-import json
+import pickle
 import config
 import matplotlib.pyplot as plt
 
@@ -9,14 +9,14 @@ def plot_training_history():
     """
     print(f"Loading history from {config.HISTORY_SAVE_PATH}...")
     try:
-        with open(config.HISTORY_SAVE_PATH, 'r') as f:
-            history_data = json.load(f)
+        with open(config.HISTORY_SAVE_PATH, 'rb') as f:
+            history_data = pickle.load(f)
     except FileNotFoundError:
         print(f"Error: Could not find history file at {config.HISTORY_SAVE_PATH}")
         print("Please run train.py first to generate the history file.")
         return
-    except json.JSONDecodeError:
-        print(f"Error: Could not decode JSON from {config.HISTORY_SAVE_PATH}.")
+    except Exception as e:
+        print(f"Error: Could not load pickle file from {config.HISTORY_SAVE_PATH}.")
         return
 
     try:
